@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS Video Player</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="flex justify-between p-4">
+        <a href="index.html" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">To main page</a>
+        <a id="uploadLink" href="upload_video.html"
+            class="text-blue-500 hover:text-blue-700 transition-colors duration-200">Upload a New Video</a>
+    </div>
+
+    <div id="video-container" class="text-center mt-8"></div>
+
+    <script type="module" src="./video.ts"></script>
+    <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
+    <script src="videojs-hls-quality-selector.min.js"></script>
+</body>
+
+</html>
