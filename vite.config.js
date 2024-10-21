@@ -13,13 +13,16 @@ export default defineConfig(({ mode }) => {
     define: {
       'import.meta.env.VITE_BASE_URL': JSON.stringify(env.VITE_BASE_URL)
     },
- //   optimizeDeps: {
-  //    include: ['video.js','videojs-hls-quality-selector'],
- //   },
+    optimizeDeps: {
+      include: ['video.js', 'videojs-contrib-quality-levels', 'videojs-quality-selector-hls']
+    },
     build: {
       outDir: '../dist',
       emptyOutDir: true,
       sourcemap: true,
+      commonjsOptions: {
+        include: [/node_modules/]
+      },
       rollupOptions: {
         input: {
           main: 'src/pages/index.html',

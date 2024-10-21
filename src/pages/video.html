@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/assets/styles/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@4.0.0/dist/videojs-contrib-quality-levels.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             fetch("header.html")
@@ -24,11 +26,6 @@
     <div id="header"></div>
 
     <div id="video-container" class="text-center mt-8"></div>
-
-    <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
-    <!--<script type="module" src="/scripts/videojs-hls-quality-selector.min.js"></script> -->
-    <!--<<script type="module" src=https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@2.0.0/dist/videojs-hls-quality-selector.min.js></script>-->
-    <!--<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@4.0.0/dist/videojs-contrib-quality-levels.min.js"></script> -->
 
     <script type="module" src="/scripts/video.ts"></script>
 </body>

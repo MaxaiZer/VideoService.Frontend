@@ -1,6 +1,14 @@
 import { baseUrl } from './config';
 import { VideoResponse } from './dto/videoResponse';
 
+document.addEventListener('DOMContentLoaded', function () {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('search') ?? "";
+    
+    fetchVideos(searchQuery);
+});
+
 async function fetchVideos(query: string) {
     try {
         const response = await fetch(`${baseUrl}/api/videos?searchQuery=` + query);
@@ -32,7 +40,7 @@ function displayVideos(videos: VideoResponse[]) {
         
         const thumbnailLink = document.createElement('a');
         const videoTitle = video.userName + ": " + video.videoName;
-        thumbnailLink.href = `/pages/video.html?id=${encodeURIComponent(video.id)}&title=${encodeURIComponent(videoTitle)}`;
+        thumbnailLink.href = `/pages/video.html?id=${encodeURIComponent(video.id)}`;
 
         const thumbnail = document.createElement('img');
         thumbnail.src = `${baseUrl}/storage/files/videos/${video.id}/thumbnail.jpg`;
@@ -62,8 +70,3 @@ document.getElementById('searchButton')?.addEventListener('click', () => {
 
     fetchVideos(query);
 });
-
-const urlParams = new URLSearchParams(window.location.search);
-const searchQuery = urlParams.get('search') ?? "";
-
-fetchVideos(searchQuery);

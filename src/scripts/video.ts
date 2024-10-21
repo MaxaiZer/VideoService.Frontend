@@ -1,16 +1,17 @@
 import { baseUrl } from './config.ts';
-import './videojs-hls-quality-selector.min.js';
+import videojs from 'video.js';
+import qualitySelectorHls from 'videojs-quality-selector-hls';
+import { VideoResponse } from './dto/videoResponse.ts';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     
-    console.log("Full URL:", window.location.href);
-    console.log("Search params:", window.location.search);
-
     const params = new URLSearchParams(window.location.search);
     const videoId = params.get('id')
-    const videoTitle = params.get('title')
-    console.log("videoId:", videoId, " videoTitle:", videoTitle)
-    
+
+    if (videoId == null)
+        throw Error("Video id is missing")
+
+    const videoInfo = await getVideoInfo(videoId);
     const videoSrc = `${baseUrl}/storage/files/videos/${videoId}/playlist`;
     
     const videoContainer = document.getElementById('video-container');
@@ -31,11 +32,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const title = document.createElement('h2');
     title.className = 'videoTitle';
-    title.textContent = videoTitle;
+    title.textContent = videoInfo.userName + ": " + videoInfo.videoName;
+
+    const formattedDate = new Date(videoInfo.createdAt).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZoneName: 'short'
+      });
+      
+    const description = document.createElement('h3');
+    description.className = 'videoDescription';
+    description.innerHTML = "Published: " + formattedDate + '<br>' + "Description: " + videoInfo.description;
 
     videoElement.appendChild(sourceElement);
     videoContainer.appendChild(videoElement);
     videoContainer.appendChild(title);
+    videoContainer.appendChild(description);
 
     const player = videojs('dynamic-video-id', {
         controls: true,
@@ -44,10 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
         techOrder: ['html5']
     });
 
-   // player.qualityLevels()
-    player.hlsQualitySelector();
+    videojs.registerPlugin('qualitySelectorHls', qualitySelectorHls);
 
     player.ready(function() {
+
+        player.qualitySelectorHls();
         const qualityLevels = player.qualityLevels();
     
         console.log(qualityLevels);
@@ -63,3 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(player.qualityLevels());
     });
 });
+
+async function getVideoInfo(id: string): Promise<VideoResponse> {
+    const response = await fetch(`${baseUrl}/api/videos/${id}`);
+    const video: VideoResponse = await response.json();
+    return video;
+}
