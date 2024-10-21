@@ -1,11 +1,17 @@
 import { baseUrl } from './config.ts';
-import 'videojs-hls-quality-selector';
-
-const params = new URLSearchParams(window.location.search);
-const videoId = params.get('id')
+import './videojs-hls-quality-selector.min.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const videoSrc = `${baseUrl}/videos/${videoId}/files/master-playlist`;
+    
+    console.log("Full URL:", window.location.href);
+    console.log("Search params:", window.location.search);
+
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get('id')
+    const videoTitle = params.get('title')
+    console.log("videoId:", videoId, " videoTitle:", videoTitle)
+    
+    const videoSrc = `${baseUrl}/storage/files/videos/${videoId}/playlist`;
     
     const videoContainer = document.getElementById('video-container');
     const videoElement = document.createElement('video');
@@ -23,8 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
     sourceElement.src = videoSrc;
     sourceElement.type = 'application/x-mpegURL';
 
+    const title = document.createElement('h2');
+    title.className = 'videoTitle';
+    title.textContent = videoTitle;
+
     videoElement.appendChild(sourceElement);
     videoContainer.appendChild(videoElement);
+    videoContainer.appendChild(title);
 
     const player = videojs('dynamic-video-id', {
         controls: true,
@@ -33,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         techOrder: ['html5']
     });
 
+   // player.qualityLevels()
     player.hlsQualitySelector();
 
     player.ready(function() {
@@ -40,21 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
         console.log(qualityLevels);
 
-        // Create an array to hold the levels
         const levels = Array.from(qualityLevels.levels_);
     
-        // Clear existing levels
         qualityLevels.levels_.length = 0;
     
-        // Reverse the levels and add them back
         levels.reverse().forEach(level => {
             qualityLevels.addLevel(level);
         });
 
         console.log(player.qualityLevels());
     });
-
-  //  player.on('qualitychange', function() {
-  //      console.log('Quality changed to: ' + player.tech().vhs.selectPlaylist().id);
- //   });
 });

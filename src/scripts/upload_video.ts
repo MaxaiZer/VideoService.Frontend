@@ -1,6 +1,7 @@
+import { convertKeysToSnakeCase, tryFetchWithAuth, userLogged, UserLoginRequiredError } from './common';
 import { baseUrl } from './config';
-import { convertKeysToSnakeCase, getCookie, CookieNames, refreshAccessToken } from './common';
 import { GetUploadUrlResponse } from './dto/getUploadUrlResponse';
+import { VideoUploadRequest } from './dto/videoUploadRequest';
 
 const form = document.getElementById('uploadForm') as HTMLFormElement | null;
 const fileInput = document.getElementById('videoFile') as HTMLInputElement | null;
@@ -10,13 +11,14 @@ const messageDiv = document.getElementById('message') as HTMLDivElement | null;
 if (!fileInput || !submitBtn || !form || !messageDiv)
     throw Error("Required elements can't be found");
 
-let videoId: string | null = null;
-let accessToken: string | null = null;
+let videoFileId: string | null = null;
 
 document.addEventListener('DOMContentLoaded', function () {
-    accessToken = localStorage.getItem(CookieNames.AccessToken);
-    console.log("access: " + accessToken);
-    console.log("cookie access: " + getCookie(CookieNames.AccessToken));
+
+    if (!userLogged()){
+        window.location.href = 'login.html';
+        return;
+    }
 });
 
 fileInput.addEventListener('change', async () => {
@@ -24,27 +26,28 @@ fileInput.addEventListener('change', async () => {
     if (!file || !messageDiv || !submitBtn) return;
 
     try {
-        // Step 1: Get presigned URL from the server
-        let response = await fetchWithAuth(`${baseUrl}/videos/presigned_upload_url`, {
-            method: 'GET'
+        const url = `${baseUrl}/api/videos/upload-url`
+        const response = await tryFetchWithAuth(url, {
+            method: 'GET',
+            credentials: 'include'
         });
 
-        if (response.status === 401) {
-            await refreshAccessToken(accessToken, messageDiv);
-            response = await fetchWithAuth(`${baseUrl}/videos/presigned_upload_url`, {
-                method: 'GET'
-            });
-        } else if (response.status !== 200) {
-            throw new Error(`fetch url returned ${response.status} by url ${baseUrl}/videos/presigned_upload_url`);
+        if (response instanceof UserLoginRequiredError) {
+            window.location.href = "login.html"
+            return
+        }
+
+        if (response instanceof Error) {
+            messageDiv.textContent = 'Internal server error!';
+            throw new Error(`fetch url ${url} returned error: ${response.message}`);
         }
 
         const data = convertKeysToSnakeCase(await response.json()) as GetUploadUrlResponse;
         console.log("received data: ", data);
 
-        videoId = data.file_name;
+        videoFileId = data.file_id;
         const presignedUrl = data.url;
 
-        // Step 2: Upload file using XMLHttpRequest to track progress
         const xhr = new XMLHttpRequest();
         xhr.open('PUT', presignedUrl, true);
         xhr.setRequestHeader('Content-Type', file.type);
@@ -55,10 +58,10 @@ fileInput.addEventListener('change', async () => {
             if (!event.lengthComputable || !messageDiv) return;
 
             const percentComplete = (event.loaded / event.total) * 100;
-            const elapsedTime = (Date.now() - startTime) / 1000; // seconds
-            const uploadSpeed = event.loaded / elapsedTime; // bytes per second
-            const speedInKbps = uploadSpeed / 1024; // convert to Kbps
-            const remainingTime = (event.total - event.loaded) / uploadSpeed; // seconds
+            const elapsedTime = (Date.now() - startTime) / 1000;
+            const uploadSpeed = event.loaded / elapsedTime; 
+            const speedInKbps = uploadSpeed / 1024;
+            const remainingTime = (event.total - event.loaded) / uploadSpeed;
 
             messageDiv.textContent = `Upload Progress: ${percentComplete.toFixed(2)}%, Speed: ${speedInKbps.toFixed(2)} Kbps, Time Left: ${remainingTime.toFixed(2)} seconds`;
         };
@@ -87,37 +90,39 @@ fileInput.addEventListener('change', async () => {
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    if (!videoId || !messageDiv) {
-        console.error("No video id!");
+    if (!videoFileId || !messageDiv) {
+        console.error("No video file id!");
         return;
     }
 
-    const dataToSend = JSON.stringify({
-        uploadedVideoId: videoId,
-        name: (document.getElementById('videoName') as HTMLInputElement)?.value,
-        description: (document.getElementById('videoDescription') as HTMLInputElement)?.value
-    });
+    const request: VideoUploadRequest = 
+    { 
+        name: (document.getElementById('videoName') as HTMLInputElement)?.value, 
+        description: (document.getElementById('videoDescription') as HTMLInputElement)?.value,
+        videoFileId: videoFileId
+    };
 
-    console.log("sending form: ", dataToSend);
+    console.log("sending form: ", request);
 
     try {
-        let response = await fetchWithAuth(`${baseUrl}/videos`, {
+        const url = `${baseUrl}/api/videos`
+        const response = await tryFetchWithAuth(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: dataToSend
+            body: JSON.stringify(request),
+            credentials: 'include'
         });
 
-        if (response.status === 401) {
-            await refreshAccessToken(accessToken, messageDiv);
-            response = await fetchWithAuth(`${baseUrl}/videos`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: dataToSend
-            });
+        if (response instanceof UserLoginRequiredError) {
+            window.location.href = "login.html"
+            return
+        }
+
+        if (response instanceof Error) {
+            messageDiv.textContent = 'Internal server error!';
+            throw new Error(`fetch url ${url} returned error: ${response.message}`);
         }
 
         if (response.ok) {
@@ -131,9 +136,3 @@ form.addEventListener('submit', async (event) => {
         messageDiv.textContent = 'An error occurred. Please try again.';
     }
 });
-
-async function fetchWithAuth(url: string, options: RequestInit): Promise<Response> {
-    options.headers = options.headers || {};
-    (options.headers as Record<string, string>)['Authorization'] = `Bearer ${getCookie(CookieNames.AccessToken)}`;
-    return fetch(url, options);
-}

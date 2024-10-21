@@ -1,5 +1,5 @@
+import { convertKeysToSnakeCase, ItemKeys, saveAccessToken, setCookie } from './common';
 import { baseUrl } from './config';
-import { convertKeysToSnakeCase, setCookie, CookieNames } from './common';
 import { LoginRequest  } from './dto/loginRequest'
 import { TokensResponse } from './dto/tokensResponse'
 
@@ -13,7 +13,7 @@ loginForm.addEventListener('submit', async (event: Event) => {
 
     try {
         const request: LoginRequest = { username: username, password: password };
-        const response = await fetch(`${baseUrl}/auth/login`, {
+        const response = await fetch(`${baseUrl}/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,11 +23,10 @@ loginForm.addEventListener('submit', async (event: Event) => {
 
         if (response.ok) {
             const data: TokensResponse = convertKeysToSnakeCase(await response.json()) as TokensResponse;
-
-            localStorage.setItem(CookieNames.AccessToken, data.access_token);
-
-            setCookie(CookieNames.AccessToken, data.access_token, 1);
-            window.location.href = '/index.html';
+            console.log(`saving access token: ${data.access_token}`)
+            saveAccessToken(data.access_token)
+            setCookie(ItemKeys.Name, username)
+            window.location.href = 'index.html';
         } else {
             const errorData = await response.json();
             messageDiv.textContent = `Login failed: ${errorData.message || 'Unknown error'}`;

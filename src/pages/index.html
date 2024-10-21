@@ -4,18 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HLS Video Player</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>VideoService</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles/styles.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("/pages/header.html")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("header").innerHTML = data;
+                })
+                .catch(error => console.error('Error loading header:', error));
+        });
+    </script>
 </head>
 
 <body>
-    <div class="flex justify-end p-4">
-        <a id="uploadLink" href="upload_video.html" class="link">Upload a New Video</a>
-    </div>
+    <div id="header"></div>
     <div class="container mx-auto p-4 w-1/3">
-        <h1 class="text-2xl font-bold text-center mb-4">Videos</h1>
-
         <div class="mb-4 flex">
             <input type="text" id="searchInput" placeholder="Search videos..."
                 class="flex-grow h-10 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
@@ -25,9 +31,9 @@
             </button>
         </div>
     </div>
-    <div id="videoGallery" class="container mx-auto p-4 last:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+    <div id="videoGallery" class="container mx-auto p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
 
-    <script type="module" src="./index.ts"></script>
+    <script type="module" src="/scripts/index.ts"></script>
 </body>
 
 </html>

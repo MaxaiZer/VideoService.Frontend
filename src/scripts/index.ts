@@ -3,7 +3,7 @@ import { VideoResponse } from './dto/videoResponse';
 
 async function fetchVideos(query: string) {
     try {
-        const response = await fetch(`${baseUrl}/videos?searchQuery=` + query);
+        const response = await fetch(`${baseUrl}/api/videos?searchQuery=` + query);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -21,23 +21,33 @@ function displayVideos(videos: VideoResponse[]) {
     gallery.innerHTML = '';
 
     videos.forEach(video => {
+
+        console.log("video id: ", video.id, "title: ", video.videoName)
+
         const videoElement = document.createElement('div');
-        videoElement.className = 'video-item';
+        videoElement.className = 'flex justify-center';
+
+        const card = document.createElement('div');
+        card.className = 'videoCard';
         
         const thumbnailLink = document.createElement('a');
-        thumbnailLink.href = `video.html?id=${video.id}`;
+        const videoTitle = video.userName + ": " + video.videoName;
+        thumbnailLink.href = `/pages/video.html?id=${encodeURIComponent(video.id)}&title=${encodeURIComponent(videoTitle)}`;
 
         const thumbnail = document.createElement('img');
-        thumbnail.src = `${baseUrl}/videos/${video.id}/files/thumbnail.jpg`;
+        thumbnail.src = `${baseUrl}/storage/files/videos/${video.id}/thumbnail.jpg`;
         thumbnail.alt = `${video.videoName} Thumbnail`;
+        thumbnail.className = "videoThumbnail"
 
         thumbnailLink.appendChild(thumbnail);
         
         const title = document.createElement('h2');
-        title.textContent = video.userName + ": " + video.videoName;
+        title.className = 'videoTitle';
+        title.textContent = videoTitle;
 
-        videoElement.appendChild(thumbnailLink);
-        videoElement.appendChild(title);
+        card.appendChild(thumbnailLink);
+        card.appendChild(title);
+        videoElement.appendChild(card)
 
         gallery.appendChild(videoElement);
     });
@@ -46,12 +56,10 @@ function displayVideos(videos: VideoResponse[]) {
 document.getElementById('searchButton')?.addEventListener('click', () => {
     const query = (document.getElementById('searchInput') as HTMLInputElement).value;
     
-    // Change the current page URL without reloading
     const newUrl = new URL(window.location.href);
     newUrl.searchParams.set('search', query);
     window.history.pushState({}, '', newUrl.toString());
 
-    // Fetch videos based on the search input
     fetchVideos(query);
 });
 

@@ -1,3 +1,4 @@
+import { ItemKeys, setCookie } from './common';
 import { baseUrl } from './config';
 import { RegistrationRequest } from './dto/registrationRequest'
 
@@ -11,7 +12,7 @@ registerForm.addEventListener('submit', async (event: Event) => {
 
     try {
         const request: RegistrationRequest = { username: username, password: password };
-        const response = await fetch(`${baseUrl}/auth/register`, {
+        const response = await fetch(`${baseUrl}/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -22,6 +23,7 @@ registerForm.addEventListener('submit', async (event: Event) => {
         if (response.ok) {
             messageDiv.classList.remove('text-red-500');
             messageDiv.classList.add('text-green-500');
+            setCookie(ItemKeys.Name, username)
             messageDiv.textContent = 'Registration successful. You can now log in.';
         } else {
             const errorData = await response.json();
