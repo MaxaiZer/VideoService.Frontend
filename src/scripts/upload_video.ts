@@ -46,8 +46,15 @@ fileInput.addEventListener('change', async () => {
         console.log("received data: ", data);
 
         videoFileId = data.file_id;
-        const presignedUrl = data.url;
+        let presignedUrl = data.url;
 
+        const currentProtocol = window.location.protocol;
+        const presignedProtocol = new URL(presignedUrl).protocol;
+
+        if (presignedProtocol !== currentProtocol) {
+            presignedUrl = presignedUrl.replace(presignedProtocol, currentProtocol);
+        }
+        
         const xhr = new XMLHttpRequest();
         xhr.open('PUT', presignedUrl, true);
         xhr.setRequestHeader('Content-Type', file.type);

@@ -40,7 +40,7 @@ function displayVideos(videos: VideoResponse[]) {
         
         const thumbnailLink = document.createElement('a');
         const videoTitle = video.userName + ": " + video.videoName;
-        thumbnailLink.href = `/pages/video.html?id=${encodeURIComponent(video.id)}`;
+        thumbnailLink.href = `video.html?id=${encodeURIComponent(video.id)}`;
 
         const thumbnail = document.createElement('img');
         thumbnail.src = `${baseUrl}/storage/files/videos/${video.id}/thumbnail.jpg`;
