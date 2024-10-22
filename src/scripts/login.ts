@@ -25,7 +25,7 @@ loginForm.addEventListener('submit', async (event: Event) => {
             const data: TokensResponse = convertKeysToSnakeCase(await response.json()) as TokensResponse;
             console.log(`saving access token: ${data.access_token}`)
             saveAccessToken(data.access_token)
-            setCookie(ItemKeys.Name, username, 7 * 24 * 60 * 60)
+            localStorage.setItem(ItemKeys.Name, username)
             window.location.href = 'index.html';
         } else {
             const errorData = await response.json();

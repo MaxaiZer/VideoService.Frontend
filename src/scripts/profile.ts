@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    usernameElement.textContent = `Welcome, ${getCookie(ItemKeys.Name)}`;
+    usernameElement.textContent = `Welcome, ${localStorage.getItem(ItemKeys.Name)}`;
 
     logoutButton.addEventListener('click', () => {
-        removeCookie(ItemKeys.Name)
+        localStorage.removeItem(ItemKeys.Name)
         window.location.href = 'login.html';
     });
 });

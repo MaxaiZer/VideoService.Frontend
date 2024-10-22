@@ -23,7 +23,6 @@ registerForm.addEventListener('submit', async (event: Event) => {
         if (response.ok) {
             messageDiv.classList.remove('text-red-500');
             messageDiv.classList.add('text-green-500');
-            setCookie(ItemKeys.Name, username)
             messageDiv.textContent = 'Registration successful. You can now log in.';
         } else {
             const errorData = await response.json();

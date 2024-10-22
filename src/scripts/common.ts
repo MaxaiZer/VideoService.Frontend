@@ -88,7 +88,7 @@ function pascalToSnakeCase(str: string): string {
 }
 
 export function userLogged(): boolean {
-    const cookie = getCookie(ItemKeys.Name)
+    const cookie = localStorage.getItem(ItemKeys.Name);
     return cookie != null && cookie != "";
 }
 
