@@ -1,4 +1,4 @@
-import { getCookie, ItemKeys, removeCookie, userLogged } from "./common";
+import { ItemKeys, userLogged } from "./common";
 
 document.addEventListener('DOMContentLoaded', () => {
     

@@ -1,4 +1,4 @@
-import { convertKeysToSnakeCase, ItemKeys, saveAccessToken, setCookie } from './common';
+import { convertKeysToSnakeCase, ItemKeys, saveAccessToken } from './common';
 import { baseUrl } from './config';
 import { LoginRequest  } from './dto/loginRequest'
 import { TokensResponse } from './dto/tokensResponse'
