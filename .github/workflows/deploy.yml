@@ -1,0 +1,43 @@
+name: Build and Deploy Angular Project
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+      
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Angular project
+      run: npm run build --prod
+
+    - name: Set env variables in the HTML
+      run: |
+        echo "Setting backendBaseUrl in index.html"
+        sed -i 's|<script src="main.js"></script>|<script>window.__env = { backendBaseUrl: "${{ env.BACKEND_BASE_URL }}" };</script><script src="main.js"></script>|' dist/video-service/browser/index.html
+
+    - name: Upload files to the server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "dist/video-service/browser/*"
+        target: "${{ env.DIR }}"
+        port: 22
+
+    - name: Clean up the environment
+      run: |
+        echo "Cleaning up..."
+        rm -rf dist/video-service/browser
