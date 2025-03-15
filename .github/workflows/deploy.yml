@@ -9,14 +9,14 @@ jobs:
       
     steps:
 
-    - name: Check if required environment variables exist
+    - name: Check if required config variables set
       run: |
-        if [ -z "${{ env.DIR }}" ]; then
-          echo "Error: DIR environment variable is not set."
+        if [ -z "${{ vars.DIR }}" ]; then
+          echo "Error: DIR variable is not set."
           exit 1
         fi
-        if [ -z "${{ env.BACKEND_BASE_URL }}" ]; then
-          echo "Error: BACKEND_BASE_URL environment variable is not set."
+        if [ -z "${{ vars.BACKEND_BASE_URL }}" ]; then
+          echo "Error: BACKEND_BASE_URL variable is not set."
           exit 1
         fi
     
@@ -34,10 +34,10 @@ jobs:
     - name: Build Angular project
       run: npm run build --prod
 
-    - name: Set env variables in the HTML
+    - name: Set variables in the HTML
       run: |
         echo "Setting backendBaseUrl in index.html"
-        sed -i 's|<script src="main.js"></script>|<script>window.__env = { backendBaseUrl: "${{ env.BACKEND_BASE_URL }}" };</script><script src="main.js"></script>|' dist/video-service/browser/index.html
+        sed -i 's|<script src="main.js"></script>|<script>window.__env = { backendBaseUrl: "${{ vars.BACKEND_BASE_URL }}" };</script><script src="main.js"></script>|' dist/video-service/browser/index.html
 
     - name: Upload files to the server
       uses: appleboy/scp-action@v0.1.7
@@ -46,7 +46,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         source: "dist/video-service/browser/*"
-        target: "${{ env.DIR }}"
+        target: "${{ vars.DIR }}"
         port: 22
 
     - name: Clean up the environment
