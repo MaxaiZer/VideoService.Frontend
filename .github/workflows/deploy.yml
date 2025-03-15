@@ -47,6 +47,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         source: "dist/video-service/browser/*"
         target: "${{ vars.DIR }}"
+        strip_components: 3
         port: 22
 
     - name: Clean up the environment
