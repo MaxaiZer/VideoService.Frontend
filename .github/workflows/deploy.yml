@@ -37,7 +37,7 @@ jobs:
     - name: Set variables in the HTML
       run: |
         echo "Setting backendBaseUrl in index.html"
-        sed -i 's|<script src="main.js"></script>|<script>window.__env = { backendBaseUrl: "${{ vars.BACKEND_BASE_URL }}" };</script><script src="main.js"></script>|' dist/video-service/browser/index.html
+        sed -i 's|<app-root></app-root>|<app-root></app-root><script>window.__env = { backendBaseUrl: "${{ vars.BACKEND_BASE_URL }}" };</script>|' dist/video-service/browser/index.html
 
     - name: Upload files to the server
       uses: appleboy/scp-action@v0.1.7
