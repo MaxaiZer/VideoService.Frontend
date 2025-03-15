@@ -1,0 +1,12 @@
+<div style="display: flex; margin-left: auto; margin-right: auto; align-items: center;">
+  <input name="input" [(ngModel)]="searchQuery" type="text" placeholder="Search videos..." class="search-input"/>
+  <button (click)="onSearch(searchQuery)">Search</button>
+</div>
+
+<app-video-gallery
+  [videos]="videos">
+</app-video-gallery>
+
+<div style="padding-top: 20px;">
+  <app-error [message]="error"></app-error>
+</div>

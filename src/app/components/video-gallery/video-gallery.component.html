@@ -1,0 +1,11 @@
+<div class="video-gallery">
+  @for (video of videos; track video.id) {
+    <div class="video-card-wrapper">
+      <app-video-card
+        [videoTitle]="video.userName + ': ' + video.videoName"
+        [videoUrl]="videoLink(video.id)"
+        [videoThumbnailUrl]="thumbnailLink(video.id)">
+      </app-video-card>
+    </div> 
+  } 
+</div>

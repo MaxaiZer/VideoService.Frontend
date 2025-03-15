@@ -1,0 +1,32 @@
+<div class="form-layout">
+    <div class="form-background">
+        <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
+            <div>
+                <p><label for="login" class="input-label" >Login:</label></p>
+                <input type="text" id="login" class="text-input" formControlName="login" required >
+            </div>
+
+            <div>
+                <p><label for="password" class="input-label">Password:</label></p>
+                <input type="password" id="password" class="text-input" formControlName="password" required>
+            </div>
+
+            <div>
+                <p><label for="confirmPassword" class="input-label">Password again:</label></p>
+                <input type="password" id="confirmPassword" class="text-input" formControlName="confirmPassword" required>
+            </div>
+
+            <div class="flex space-x-4 pt-5" style="padding-top: 20px;">
+                <button type="submit" class="w-full form-button"  [disabled]="!passwordForm.valid">
+                    Register
+                </button>
+                <button type="button" class="w-full form-button" (click)="onLogin()">
+                    Already registered? Login
+                </button>
+            </div>
+        </form>
+    </div>
+    <div style="padding-top: 20px;">
+        <app-error [message]="error"></app-error>
+    </div>
+</div>

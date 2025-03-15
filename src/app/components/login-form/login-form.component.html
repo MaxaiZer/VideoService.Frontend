@@ -1,0 +1,27 @@
+<div class="form-layout">
+    <div class="form-background">
+        <form #uploadForm="ngForm" (ngSubmit)="onSubmit()">
+            <div>
+                <p><label for="login" class="input-label">Login:</label></p>
+                <input type="text" id="login" class="text-input" [(ngModel)]="login" name="login" required >
+            </div>
+
+            <div>
+                <p><label for="password" class="input-label">Password:</label></p>
+                <input type="password" id="password" class="text-input" [(ngModel)]="password" name="password" required>
+            </div>
+
+            <div class="flex space-x-4 pt-5" style="padding-top: 20px;">
+                <button type="submit" class="w-full form-button" [disabled]="!uploadForm.valid">
+                    Login
+                </button>
+                <button type="button" class="w-full form-button" (click)="onRegister()">
+                    New here? Register
+                </button>
+            </div>
+        </form>
+    </div>
+    <div style="padding-top: 20px;">
+        <app-error  [message]="error"></app-error>
+    </div>
+</div>

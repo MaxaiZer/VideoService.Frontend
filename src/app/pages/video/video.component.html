@@ -1,0 +1,12 @@
+<div style="padding-top:50px; width: 50%; margin-left: auto; margin-right: auto;">
+    <app-video-player
+        [url]="videoUrl()"></app-video-player>
+    <div *ngIf="videoLoaded" style="padding-top: 20px;">
+        <app-video-description
+            [userName]="video.userName"
+            [videoTitle]="video.videoName"
+            [videoDescription]="video.description"
+            [createdAt]="video.createdAt">
+        </app-video-description>
+    </div>
+</div>

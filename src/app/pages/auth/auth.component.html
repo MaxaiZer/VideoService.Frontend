@@ -1,0 +1,7 @@
+
+<div *ngIf="state === AuthState.LOGIN">
+    <app-login-form (registerClicked)="onRegister()" />
+</div>
+<div *ngIf="state === AuthState.REGISTER" >
+    <app-registration-form (loginClicked)="onLogin()" />
+</div>

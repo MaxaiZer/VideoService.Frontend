@@ -1,0 +1,10 @@
+<div class="video-header">
+    <div class="w-14 h-14 bg-gray-300 rounded-full flex items-center justify-center text-xl font-bold">
+        {{ userName.charAt(0) }}
+      </div>
+    <h2 class="video-title">{{ userName + ": " + videoTitle }}</h2>
+</div>
+<div style="padding-top: 20px;">
+    <p class="video-meta">Published: <span class="video-date">{{ formattedDate }}</span></p>
+    <p class="video-description">{{ videoDescription }}</p>
+</div>

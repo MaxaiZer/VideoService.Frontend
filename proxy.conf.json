@@ -1,0 +1,15 @@
+{
+    "/api": {
+      "target": "http://localhost",
+      "secure": false,
+      "changeOrigin": true,
+      "logLevel": "debug",
+      "withCredentials": true
+    },
+    "/storage": {
+      "target": "http://localhost",
+      "secure": false,
+      "changeOrigin": true,
+      "logLevel": "debug"
+    }
+}

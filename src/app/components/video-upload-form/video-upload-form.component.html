@@ -1,0 +1,56 @@
+<div class="form-layout">
+
+    <div class="form-background">
+      <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Upload Your Video!</h1>
+  
+      <form #uploadForm="ngForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Video Name -->
+        <div>
+          <label for="videoName" class="input-label">Video Name:</label>
+          <input type="text" id="videoName" [(ngModel)]="name" name="videoName" required 
+            class="text-input" />
+        </div>
+  
+        <!-- Video Description -->
+        <div>
+          <label for="videoDescription" class="input-label">Description:</label>
+          <textarea id="videoDescription" [(ngModel)]="description" name="videoDescription" rows="4" required
+            class="text-input"></textarea>
+        </div>
+  
+        <!-- Video File -->
+        <div>
+          <label for="videoFile" class="input-label">Select Video File:</label>
+          <input type="file" id="videoFile" accept="video/*" required (change)="onFileChange($event)"
+            class="mt-2 p-3 w-full text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        <!-- Progress Bar -->
+        <div *ngIf="uploadProgress > 0" class="w-full mt-4">
+          <div class="h-2 bg-gray-300 rounded-full">
+            <div [style.width.%]="uploadProgress" class="h-full bg-blue-600 rounded-full"></div>
+          </div>
+          <div class="text-center text-sm text-gray-600 mt-2">{{ uploadProgress }}%</div>
+        </div>
+
+        <!-- Success Message -->
+        <div *ngIf="videoUploaded" class="text-center text-green-600 mt-4">
+          Video uploaded successfully!
+        </div>
+    
+        <!-- Submit Button -->
+        <div>
+          <button type="submit" [disabled]="!uploadForm.valid || error || !fileUploaded" 
+            class="w-full form-button">
+            Upload Video
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Error message display -->
+    <div class="mt-6">
+      <app-error [message]="error"></app-error>
+    </div>
+  
+</div>

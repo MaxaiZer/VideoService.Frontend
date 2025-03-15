@@ -1,0 +1,30 @@
+.video-card {
+    height: 100%;
+    min-height: 12rem;
+    width: 100%;
+    background-color: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    transform: scale(1);
+    will-change: transform;
+}
+
+.video-card:hover {
+    transform: scale(1.05);
+}
+
+.video-thumbnail {
+    width: 100%;
+    object-fit: cover;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.video-title {
+    color: #2d3748;
+    font-size: 1.125rem;
+    font-weight: 600;
+    padding: 0.5rem;
+}

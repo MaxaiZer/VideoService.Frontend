@@ -1,0 +1,23 @@
+<div class="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-xl flex flex-col min-h-[400px]">
+
+    <div class="flex items-center space-x-4">
+      <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-xl font-bold">
+        {{ profile?.name?.charAt(0) }}
+      </div>
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-800">{{ profile?.name }}</h1>
+      </div>
+      <div class="ml-auto">
+        <img src="/assets/images/logout.png" alt="Logout" class="w-6 h-6 cursor-pointer" (click)="onLogout()" />
+      </div>
+    </div>
+  
+    <hr class="my-4 border-gray-200" />
+  
+    <div class="flex-grow flex justify-center">
+        <div *ngIf="videosLoaded && !videos.length" class="text-center text-gray-500 text-xl">
+          <p>Нет видео :(</p>
+        </div>
+        <app-video-gallery *ngIf="videos?.length" [videos]="videos" class="w-full"></app-video-gallery>
+      </div>
+  </div>
