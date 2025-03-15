@@ -8,6 +8,18 @@ jobs:
     runs-on: ubuntu-latest
       
     steps:
+
+    - name: Check if required environment variables exist
+      run: |
+        if [ -z "${{ env.DIR }}" ]; then
+          echo "Error: DIR environment variable is not set."
+          exit 1
+        fi
+        if [ -z "${{ env.BACKEND_BASE_URL }}" ]; then
+          echo "Error: BACKEND_BASE_URL environment variable is not set."
+          exit 1
+        fi
+    
     - name: Checkout the repository
       uses: actions/checkout@v4
 
