@@ -40,7 +40,7 @@
     
         <!-- Submit Button -->
         <div>
-          <button type="submit" [disabled]="!uploadForm.valid || error || !fileUploaded" 
+          <button type="submit" [disabled]="!uploadForm.valid || error || !fileUploaded || videoUploaded" 
             class="w-full form-button">
             Upload Video
           </button>

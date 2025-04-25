@@ -36,6 +36,7 @@ export class VideoUploadFormComponent {
   onFileChange(event: any) {
     
     this.error = null;
+    this.fileUploaded = this.videoUploaded = false;
 
     const file = event.target.files[0];
     if (!file) return;
